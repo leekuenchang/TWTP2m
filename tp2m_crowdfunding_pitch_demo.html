@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TP2m 跨太平洋兩米天文望遠鏡計畫｜集資與提案雙模系統</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for premium look -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #030712;
+      color: #f3f4f6;
+      scroll-behavior: smooth;
+    }
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+    /* Dynamic glassmorphism */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover:hover {
+      background: rgba(15, 23, 42, 0.6);
+      border-color: rgba(251, 191, 36, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(251, 191, 36, 0.15);
+      transform: translateY(-2px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* Glow effect */
+    .glow-amber {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
+    }
+    /* Smooth transition */
+    .fade-enter {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .fade-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    /* Hidden scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Slider custom styling */
+    .slider-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .before-after-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen overflow-x-hidden">
+
+  <!-- Background Space Canvas (Dynamic Stars) -->
+  <canvas id="starfield" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed top-24 right-6 z-50 transform translate-x-80 opacity-0 transition-all duration-300 ease-out glass-card border-l-4 border-amber-500 p-4 rounded-lg flex items-center space-x-3 shadow-2xl max-w-sm">
+    <div class="text-amber-500">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+    <div>
+      <h4 class="font-bold text-sm text-white" id="toast-title">通知</h4>
+      <p class="text-xs text-slate-300" id="toast-desc">內容說明</p>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="fixed top-0 left-0 w-full z-40 glass-card border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <!-- Star/Telescope Icon -->
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center glow-amber">
+        <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.24.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118l-3.97-2.883c-.77-.57-.37-1.81.588-1.81h4.908a1 1 0 00.95-.69l1.519-4.674z"></path>
+        </svg>
+      </div>
+      <div>
+        <span class="text-xs tracking-wider text-amber-400 font-bold block">TAIWAN TP2m PROJECT</span>
+        <h1 class="text-lg font-black tracking-tight text-white flex items-center">
+          跨太平洋兩米望遠鏡計畫
+        </h1>
+      </div>
+    </div>
+
+    <!-- Mode Selector & Action Buttons -->
+    <div class="flex items-center space-x-3 md:space-x-4">
+      <div class="bg-slate-950/80 p-1 rounded-full border border-white/10 flex items-center text-xs md:text-sm">
+        <button id="btn-page-mode" onclick="switchMode('page')" class="px-4 py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber">
+          集資網頁
+        </button>
+        <button id="btn-slide-mode" onclick="switchMode('slide')" class="px-4 py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300">
+          簡報播放 🎬
+        </button>
+      </div>
+
+      <a href="#rewards-section" id="nav-cta" class="hidden md:inline-flex px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-sm tracking-wide transition-all hover:scale-105 active:scale-95 glow-amber">
+        立即支持
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================== -->
+  <!-- 1. LANDING PAGE MODE (集資網頁模式) -->
+  <!-- ============================================== -->
+  <main id="page-container" class="relative z-10 pt-24 pb-24 transition-opacity duration-500">
+    
+    <!-- Hero / 首屏 -->
+    <section class="relative min-h-[90vh] flex items-center justify-center px-6 py-12 md:py-24">
+      <div class="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Title & Slogan -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase">
+            <span>🔥 願景重生與夢想擴散（To Be）專案</span>
+          </div>
+          <h2 class="text-4xl md:text-6xl font-black leading-tight text-white">
+            喚醒沉睡十年的巨眼，<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400">讓台灣瞬間回應宇宙閃耀</span>
+          </h2>
+          <p class="text-lg md:text-xl text-slate-300 font-light leading-relaxed">
+            跨越太平洋的尋光之旅：打破地理限制，攜手建構永不落日的黃金觀測三角。我們一起，點亮台灣下一代的宇宙之燈。
+          </p>
+
+          <!-- Backer Quote Highlight -->
+          <div class="border-l-4 border-cyan-400 pl-4 py-2 bg-cyan-950/20 rounded-r-lg max-w-xl text-left mx-auto lg:mx-0">
+            <span class="text-xs text-cyan-400 font-bold block mb-1">貝殼放大顧問總監導讀 ✦</span>
+            <p class="text-sm italic text-slate-300">
+              「群眾集資從來不是乞討，而是一場邀請大眾共同分配社會資源的平權運動。」
+            </p>
+          </div>
+
+          <!-- Fast Stat & CTA Group -->
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <a href="#rewards-section" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-lg font-bold tracking-wider hover:scale-105 active:scale-95 transition-all text-center glow-amber shadow-amber-500/20">
+              參與宇宙開眼計畫
+            </a>
+            <a href="#intro-section" class="w-full sm:w-auto px-8 py-4 rounded-full glass-card hover:bg-slate-900 border border-white/10 text-white text-lg font-semibold tracking-wider transition-all text-center">
+              探索大夢始末
+            </a>
+          </div>
+
+          <!-- Project Metadata -->
+          <div class="grid grid-cols-3 gap-4 pt-8 border-t border-white/5 max-w-md mx-auto lg:mx-0">
+            <div>
+              <span class="text-xs text-slate-400 block">沉沒歷史成本</span>
+              <span class="text-xl md:text-2xl font-bold text-white font-cinzel">7,279 萬</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 block">台灣主導權</span>
+              <span class="text-xl md:text-2xl font-bold text-cyan-400 font-cinzel">55 %</span>
+            </div>
+            <div>
+              <span class="text-xs text-slate-400 block">觀測生命週期</span>
+              <span class="text-xl md:text-2xl font-bold text-amber-400 font-cinzel">10 年+</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- High-fidelity Custom SVG Telescope Visualizer -->
+        <div class="lg:col-span-5 relative flex justify-center">
+          <div class="w-full max-w-md aspect-square rounded-3xl glass-card p-6 border border-white/10 relative overflow-hidden flex flex-col justify-between items-center glow-cyan">
+            <!-- Simulated Telescope Graphic with SVG -->
+            <svg class="w-full h-64" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="spaceGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                  <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#0a0f24" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="mirrorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fbbf24"/>
+                  <stop offset="50%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#0284c7"/>
+                </linearGradient>
+              </defs>
+              <circle cx="100" cy="100" r="90" fill="url(#spaceGlow)" />
+              <!-- Telescope Base Structure -->
+              <path d="M70 160 L130 160 L120 140 L80 140 Z" fill="#334155" />
+              <rect x="94" y="110" width="12" height="30" rx="2" fill="#475569" />
+              <!-- Fork Mount -->
+              <path d="M60 110 C60 110 70 80 100 80 C130 80 140 110 140 110" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+              <!-- Telescope Optical Tube Assembly -->
+              <g transform="rotate(-25 100 100)">
+                <rect x="75" y="50" width="50" height="70" rx="6" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+                <!-- Huge 2-meter Mirror Reflection -->
+                <ellipse cx="100" cy="55" rx="20" ry="6" fill="url(#mirrorGrad)" stroke="#f59e0b" stroke-width="2" />
+                <!-- Laser beam pointing out -->
+                <path d="M100 50 L100 -40" stroke="#06b6d4" stroke-width="4" stroke-dasharray="4 2" class="animate-pulse" />
+                <!-- Secondary mirror structure -->
+                <line x1="85" y1="15" x2="115" y2="15" stroke="#94a3b8" stroke-width="2" />
+                <path d="M85 15 L100 55 M115 15 L100 55" stroke="#475569" stroke-dasharray="2 2" />
+              </g>
+              <!-- Star details -->
+              <circle cx="40" cy="40" r="1.5" fill="#fff" class="animate-ping" />
+              <circle cx="170" cy="60" r="1" fill="#fff" />
+              <circle cx="150" cy="150" r="2" fill="#fbbf24" />
+            </svg>
+            <div class="text-center space-y-1">
+              <span class="text-xs text-amber-400 font-bold uppercase tracking-wider block">實拍特寫擬真鏡像</span>
+              <p class="text-xs text-slate-400 leading-snug px-4">
+                剛在日本西村工廠改裝完成之兩米精密非球面主鏡特寫，光線折射在矽晶玻璃鏡面上，倒映出科研人員專注的身影。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Initiator Quote / 起心動念 -->
+    <section id="intro-section" class="py-20 bg-slate-950/40 relative">
+      <div class="max-w-4xl mx-auto px-6 text-center space-y-8">
+        <div class="w-16 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto"></div>
+        <span class="text-amber-400 text-xs font-bold uppercase tracking-widest block">起心動念 ✦ 靈魂人物引言</span>
+        
+        <!-- Professor Quote Box -->
+        <blockquote class="relative">
+          <span class="absolute -top-12 -left-4 text-8xl text-slate-800 font-serif pointer-events-none">“</span>
+          <p class="text-xl md:text-3xl font-medium text-slate-100 leading-relaxed relative z-10">
+            「我們總是好奇自己在哪裡、往何去。這台望遠鏡歷經流標停擺，但我們從未放棄。這一次，我們在太平洋另一端找到了絕佳星空。儀器好了，請跟我們一起推這最後一把，為台灣點亮這盞宇宙之燈。」
+          </p>
+          <span class="absolute -bottom-16 -right-4 text-8xl text-slate-800 font-serif pointer-events-none">”</span>
+        </blockquote>
+
+        <!-- Profile Detail -->
+        <div class="pt-6 flex flex-col items-center">
+          <div class="w-20 h-20 rounded-full border-2 border-amber-500 p-1 mb-3 bg-slate-900 overflow-hidden flex items-center justify-center">
+            <!-- Custom Styled Avatar Silhouette of a Passionate Professor -->
+            <svg class="w-12 h-12 text-amber-500/80" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <h4 class="text-white font-bold text-lg">陳文屏 講座教授</h4>
+          <p class="text-xs text-slate-400">TP2m 計畫主持人 / 國立中央大學天文研究所</p>
+          <p class="text-xs text-slate-500 mt-2 max-w-md italic">「正在辦公室對著電腦螢幕分析星空光譜，與學生專注解決問題的真實寫照。」</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Key Scenes / 看見現場 (Interactive Tabs) -->
+    <section class="py-24 px-6 max-w-6xl mx-auto">
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-widest block">故事與共感 ✦ SENSING THE FIELD</span>
+        <h3 class="text-3xl md:text-4xl font-black text-white">直擊 TP2m 三個關鍵現場</h3>
+        <p class="text-slate-400">一架望遠鏡從倉庫到墨西哥世界屋脊，凝聚了無數科學家與倡議者「不放棄」的靈魂。</p>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-12">
+        <button onclick="switchScene(1)" id="btn-scene-1" class="w-full md:w-auto px-6 py-4 rounded-xl text-left border-l-4 border-amber-500 transition-all bg-slate-900 text-white">
+          <span class="text-xs text-amber-400 block font-bold">Scene 01 / 困境（不簡單）</span>
+          <span class="font-bold">倉庫裡的七千萬大夢</span>
+        </button>
+        <button onclick="switchScene(2)" id="btn-scene-2" class="w-full md:w-auto px-6 py-4 rounded-xl text-left border-l-4 border-slate-700 hover:border-cyan-400 transition-all bg-slate-900/40 text-slate-400 hover:text-white">
+          <span class="text-xs text-slate-500 block font-bold">Scene 02 / 堅持（不容易）</span>
+          <span class="font-bold">跨越半個地球的尋光之旅</span>
+        </button>
+        <button onclick="switchScene(3)" id="btn-scene-3" class="w-full md:w-auto px-6 py-4 rounded-xl text-left border-l-4 border-slate-700 hover:border-emerald-400 transition-all bg-slate-900/40 text-slate-400 hover:text-white">
+          <span class="text-xs text-slate-500 block font-bold">Scene 03 / 行動（不放棄）</span>
+          <span class="font-bold">重生媒體與科研大夢共鳴</span>
+        </button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div id="scene-content" class="glass-card rounded-3xl p-8 md:p-12 min-h-[400px] flex flex-col lg:flex-row gap-12 items-center transition-all duration-300">
+        <!-- Dynaimc content injected by JS -->
+      </div>
+    </section>
+
+    <!-- Scientific Quote / 學者尊嚴 -->
+    <section class="py-16 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-center px-6">
+      <div class="max-w-4xl mx-auto space-y-4">
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-widest block">學子心聲 ✦ THE REAL DIGNITY</span>
+        <p class="text-lg md:text-2xl text-slate-200 font-medium leading-relaxed italic">
+          「如果台灣在墨西哥有了自己的兩米望遠鏡，我們將享有 55% 的優先觀測時間。當宇宙閃耀警報，我們不用等國外學者挑剩的二手數據，可以在 3 小時內直接遠端調轉自己的望遠鏡指認本質。那種站在第一線的科研尊嚴，是無價的。」
+        </p>
+        <div class="pt-4">
+          <span class="text-white font-bold block">台灣青年天文學者 / 研究生代表</span>
+          <span class="text-xs text-slate-500">時域天文學觀測團隊成員</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust & Endorsements / 我們的實績與推薦 -->
+    <section class="py-24 px-6 max-w-6xl mx-auto space-y-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Achievements -->
+        <div class="lg:col-span-5 space-y-6">
+          <span class="text-amber-400 text-xs font-bold uppercase tracking-widest block">憑什麼是我們 ✦ TRUST</span>
+          <h3 class="text-3xl md:text-4xl font-black text-white">深耕觀測天文三十年，<br>台灣科學家最後的一哩路</h3>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            中央大學天文研究所與鹿林天文台，曾利用一米望遠鏡自主發現台灣第一顆小行星與第一顆彗星，更是台灣唯一參與國際「泛星計畫」與智利魯賓天文台「LSST 計畫」的頂尖團隊。我們具備豐富的實戰數據掌控力，這次將用 7,279 萬元的既有硬體基礎，撬動國際頂級台址的絕對主導權。
+          </p>
+          <div class="p-4 bg-amber-500/5 rounded-xl border border-amber-500/20 text-xs text-amber-400 leading-relaxed">
+            <strong>✦ 獨家優勢：</strong>別人的募款是在買既有制度，我們的募款是讓閒置的台灣大夢在世界最美夜空下復活。TP2m 讓台灣在國際尖端「時域天文學」中擁有絕對的自主排程權，當黑洞或重力波爆發，我們擁有立刻指認變化天體的主導權。
+          </div>
+        </div>
+
+        <!-- Right Endorsements Grid -->
+        <div class="lg:col-span-7 space-y-6">
+          <h4 class="text-white font-bold text-lg flex items-center space-x-2">
+            <span>🌟 跨界名人熱血聯袂推薦</span>
+            <span class="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">已加入 & 擬邀請名單</span>
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Card 1 -->
+            <div class="glass-card p-5 rounded-2xl space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h5 class="text-white font-bold">鄭崇華</h5>
+                  <p class="text-[10px] text-slate-400">台達電子創辦人暨董事長</p>
+                </div>
+                <span class="text-xs bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full font-bold">支持</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">「希望透過對天文研究的支持，讓人類對宇宙的奧妙、地球的珍貴能有更多了解，從而重視永續發展。」</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="glass-card p-5 rounded-2xl space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h5 class="text-white font-bold">孫維新</h5>
+                  <p class="text-[10px] text-slate-400">《科學人》總編輯 / 天文學家</p>
+                </div>
+                <span class="text-xs bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full font-bold">發起倡議</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">「這是一場科學與大眾的雙向奔赴，點亮這盞燈，就是點亮台灣下一代看世界、看未來的眼界。」</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="glass-card p-5 rounded-2xl space-y-3 opacity-90 border-dashed border-white/20">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h5 class="text-white font-bold">林百里</h5>
+                  <p class="text-[10px] text-slate-400">廣達電腦董事長</p>
+                </div>
+                <span class="text-xs bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full font-bold">擬邀</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">「支持台灣軟實力與天文巨量數據的結合，為下一代打造科技與宇宙的真實橋樑。」</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="glass-card p-5 rounded-2xl space-y-3 opacity-90 border-dashed border-white/20">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h5 class="text-white font-bold">葉丙成</h5>
+                  <p class="text-[10px] text-slate-400">台大教授 / 創新教育倡導者</p>
+                </div>
+                <span class="text-xs bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full font-bold">擬邀</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">「這不只是科研，更是最酷的跨國遠距教室，讓台灣孩子在課堂上直接操控美洲的望遠鏡！」</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Field Partner Voice Box -->
+      <div class="bg-slate-900/60 p-6 rounded-3xl border border-white/5 space-y-6">
+        <h4 class="text-white font-bold text-center">來自墨西哥觀測前線夥伴的聲音 📣</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-2 border-l-2 border-amber-500 pl-4">
+            <p class="text-xs italic text-slate-300">「很多人以為我們瘋了，把塵封十年的望遠鏡運到半個地球外。但當我們在墨西哥看到那片無污染的星空時，我知道，台灣的科學家終於有機會在世界舞台上平起平坐。」</p>
+            <span class="text-xs text-white font-bold block">— 周翊（中央大學天文研究所教授）</span>
+          </div>
+          <div class="space-y-2 border-l-2 border-cyan-400 pl-4">
+            <p class="text-xs italic text-slate-300">「全自動排程軟體的開發是這計畫的靈魂。我們不只是在架設硬體，更是拉著台灣的年輕學生，一起在時域天文學的最前線跟時間賽跑。」</p>
+            <span class="text-xs text-white font-bold block">— 潘彥丞（中央大學天文研究所副教授）</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Before / After Slider / 改變的模樣 -->
+    <section class="py-24 px-6 bg-slate-950/60 border-y border-white/5">
+      <div class="max-w-4xl mx-auto space-y-12">
+        <div class="text-center space-y-4">
+          <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest block">改變與承諾 ✦ BEFORE & AFTER</span>
+          <h3 class="text-3xl md:text-4xl font-black text-white">拖曳滑桿：看見台灣太空大夢的重生</h3>
+          <p class="text-slate-400 text-sm">親手揭開塵封十年的木箱，讓台灣自主的精密圓頂傲然挺立於墨西哥 SPM 高原星空。</p>
+        </div>
+
+        <!-- Before After Interactive Container -->
+        <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-white/10 shadow-2xl slider-container" id="slider-root">
+          <!-- "AFTER" Background (SPM Observatory Night) -->
+          <div class="w-full h-full bg-[#030712] flex flex-col justify-center items-center p-8 text-center text-white">
+            <svg class="w-24 h-24 text-amber-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            <h4 class="text-xl md:text-2xl font-black text-amber-300">重生！墨西哥 SPM 頂級觀測台址</h4>
+            <p class="text-xs text-slate-300 max-w-md mt-2">
+              「高海拔完美大氣、零光害的深邃星空下。自動化控制圓頂全速運行，在第一時間主導捕捉爆發的黑洞與超新星警報。」
+            </p>
+          </div>
+
+          <!-- "BEFORE" Overlay (Dark Warehouse Box) -->
+          <div class="before-after-img flex flex-col justify-center items-center p-8 text-center text-slate-400 bg-slate-950/95" id="before-layer" style="width: 50%; border-right: 2px solid #f59e0b;">
+            <div class="absolute inset-0 bg-slate-950/80 pointer-events-none"></div>
+            <div class="relative z-10 w-full flex flex-col items-center justify-center">
+              <svg class="w-24 h-24 text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+              <h4 class="text-xl md:text-2xl font-bold text-slate-400">停擺... 倉庫中塵封的主鏡零件</h4>
+              <p class="text-[10px] text-slate-500 max-w-xs mt-2">
+                「在連續 12 次流標的遺憾與高山搬運的致命痛楚下，這雙眼被迫在陰暗木箱中沉睡了十餘年。」
+              </p>
+            </div>
+          </div>
+
+          <!-- Drag Control / Handle -->
+          <input type="range" min="0" max="100" value="50" id="slider-input" class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20" oninput="handleSlider(this.value)">
+          <div id="slider-handle" class="absolute top-0 bottom-0 w-1 bg-amber-500 z-10 pointer-events-none" style="left: 50%;">
+            <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-xs shadow-lg shadow-amber-500/50">↔</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Urgency & Financing Plan / 危機、解方與資金全貌 -->
+    <section class="py-24 px-6 max-w-6xl mx-auto space-y-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Urgent Alert -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold">
+            <span>🚨 關鍵告急時刻</span>
+          </div>
+          <h3 class="text-3xl font-black text-white leading-tight">2026 年 6 月：<br>我們正面臨關鍵的命運分水嶺</h3>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            目前，這款兩米望遠鏡已在日本西村工廠改裝升級完成，正等待啟航運往墨西哥。如果這最後的 <strong>3,000 萬元</strong>資金缺口無法及時補齊，望遠鏡將面臨「有主體卻無氣候防護遮罩與精密自控圓頂」的停擺境地。
+          </p>
+          <div class="p-5 rounded-2xl bg-red-500/5 border border-red-500/20 space-y-3">
+            <h5 class="text-red-400 font-bold text-sm">若未達標，我們將失去：</h5>
+            <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+              <li>墨西哥 SPM 高海拔圓頂的自動連動與全自動排程軟體</li>
+              <li>跨太平洋高速觀測數據中心的硬體機房與永續電網建置</li>
+              <li>台灣學子對於國際頂級設備 55% 的絕對優先主導發言權</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Funding Progress & 3 Stages -->
+        <div class="lg:col-span-7 space-y-8">
+          <h4 class="text-white font-bold text-lg">💰 資金募集全貌與階段里程碑</h4>
+          
+          <!-- Visual progress bar -->
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-400">政府國科會/校方資助 (已到位)</span>
+              <span class="text-amber-400">本次群眾募資目標 (最後一哩路)</span>
+            </div>
+            <div class="h-6 w-full bg-slate-950 rounded-full overflow-hidden p-1 border border-white/10 flex">
+              <!-- Funded part (60M) -->
+              <div class="h-full bg-slate-800 rounded-full flex items-center justify-center text-[10px] text-slate-400 font-bold" style="width: 66.6%;">
+                已到位資助 $6,000 萬 (66.6%)
+              </div>
+              <!-- Target part (30M) -->
+              <div class="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-r-full flex items-center justify-center text-[10px] text-slate-950 font-extrabold animate-pulse" style="width: 33.4%;">
+                集資目標 $3,000 萬
+              </div>
+            </div>
+            <div class="text-[10px] text-slate-500 text-right">總計畫硬體與營運總成本共 $8,000 萬元，自籌率高達 66.6%</div>
+          </div>
+
+          <!-- Vertical Milestones Steps -->
+          <div class="space-y-4">
+            <!-- Stage 1 -->
+            <div class="glass-card p-4 rounded-xl flex gap-4 border-l-4 border-amber-500">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 font-black font-cinzel text-lg shrink-0">1</div>
+              <div>
+                <h5 class="text-white font-bold text-sm flex items-center justify-between">
+                  <span>第一階段：基本生存線 ($1,000 萬)</span>
+                  <span class="text-xs text-amber-400">微控自驅軟體</span>
+                </h5>
+                <p class="text-xs text-slate-400 mt-1">支應自動化圓頂微控驅動構造與控制軟體開發，確保望遠鏡具備與圓頂自動連動、排程觀測的最基本生存能力。</p>
+              </div>
+            </div>
+            <!-- Stage 2 -->
+            <div class="glass-card p-4 rounded-xl flex gap-4 border-l-4 border-slate-700">
+              <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 font-black font-cinzel text-lg shrink-0">2</div>
+              <div>
+                <h5 class="text-white font-bold text-sm flex items-center justify-between">
+                  <span>第二階段：穩定運行線 ($2,000 萬)</span>
+                  <span class="text-xs text-slate-400">數據高速傳輸</span>
+                </h5>
+                <p class="text-xs text-slate-400 mt-1">建置數據中心、機房高速通訊基礎建設與緊急備用永續能源系統，確保跨太平洋百萬數據能毫秒級穩定回傳至台灣研究室。</p>
+              </div>
+            </div>
+            <!-- Stage 3 -->
+            <div class="glass-card p-4 rounded-xl flex gap-4 border-l-4 border-slate-700">
+              <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 font-black font-cinzel text-lg shrink-0">3</div>
+              <div>
+                <h5 class="text-white font-bold text-sm flex items-center justify-between">
+                  <span>第三階段：理想願景線 ($3,000 萬)</span>
+                  <span class="text-xs text-slate-400">精密遮罩本體</span>
+                </h5>
+                <p class="text-xs text-slate-400 mt-1">完整建置全遮罩防護建築本體，提供抗風沙與溫控調節。遠端自動操作正式啟動，點亮 10 年不熄滅的宇宙之燈與星空遠距教室。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Money allocation & Impact / 資金分配與顧問檢核 -->
+    <section class="py-24 px-6 bg-slate-900/40 border-t border-white/5">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Allocations -->
+        <div class="lg:col-span-6 space-y-6">
+          <span class="text-cyan-400 text-xs font-bold uppercase tracking-widest block">科學分配 ✦ BUDGET AUDIT</span>
+          <h3 class="text-3xl font-black text-white">每一分群眾資金的去向</h3>
+          <p class="text-slate-300 text-sm">
+            我們秉持貝殼放大最嚴謹的顧問檢核標準，資金不僅僅購買硬體（寬度），更著重程式研發與國際人才維運（厚度），以及科普永續發展（長度）：
+          </p>
+          
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white font-bold">自動化圓頂與觀測站遮罩硬體 (硬體寬度)</span>
+                <span class="text-amber-400 font-bold">60%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-500" style="width: 60%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white font-bold">自動化排程與跨國運維團隊 (人才厚度)</span>
+                <span class="text-cyan-400 font-bold">25%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                <div class="h-full bg-cyan-400" style="width: 25%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white font-bold">大眾科普遠距教室與回饋品製作 (傳播長度)</span>
+                <span class="text-emerald-400 font-bold">10%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-400" style="width: 10%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-white font-bold">專案行政、雜支與國際審計費用</span>
+                <span class="text-slate-400 font-bold">5%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                <div class="h-full bg-slate-400" style="width: 5%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Graphic / Golden Triangle Map -->
+        <div class="lg:col-span-6 flex justify-center">
+          <div class="w-full max-w-md glass-card rounded-3xl p-6 border border-white/10 text-center space-y-4">
+            <h4 class="text-white font-bold">跨太平洋「黃金觀測三角」布局</h4>
+            <div class="relative aspect-video rounded-xl bg-slate-950 border border-white/5 overflow-hidden flex items-center justify-center">
+              <!-- Visual Simulated map line -->
+              <svg class="w-full h-full" viewBox="0 0 300 150">
+                <!-- Pacific Ocean Representation -->
+                <path d="M10 75 Q150 140 290 75" fill="none" stroke="#1e293b" stroke-width="4" stroke-dasharray="2 2" />
+                <!-- Connected Points -->
+                <!-- Taiwan (Lulin) -->
+                <circle cx="40" cy="80" r="6" fill="#fbbf24" />
+                <text x="35" y="98" fill="#fbbf24" font-size="8" font-weight="bold">鹿林 (台灣)</text>
+                <!-- Mexico SPM -->
+                <circle cx="200" cy="50" r="6" fill="#06b6d4" />
+                <text x="180" y="40" fill="#06b6d4" font-size="8" font-weight="bold">墨西哥 SPM</text>
+                <!-- Chile LSST -->
+                <circle cx="230" cy="110" r="4" fill="#10b981" />
+                <text x="238" y="114" fill="#10b981" font-size="8">智利 (國際)</text>
+                
+                <!-- Laser Lines establishing Golden Triangle -->
+                <line x1="40" y1="80" x2="200" y2="50" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" />
+                <line x1="200" y1="50" x2="230" y2="110" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="3 3" />
+                <line x1="40" y1="80" x2="230" y2="110" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3" />
+              </svg>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed text-left">
+              運用墨西哥與台灣極佳的<strong>日夜時差與經緯度優勢</strong>，搭配鹿林觀測站及智利 LSST 設備，為台灣買下一張自主排程、永不落日的宇宙監視黃金門票。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Support Rewards & Packages / 參與行動方案 -->
+    <section id="rewards-section" class="py-24 px-6 max-w-6xl mx-auto space-y-16">
+      <div class="text-center max-w-2xl mx-auto space-y-4">
+        <span class="text-amber-400 text-xs font-bold uppercase tracking-widest block">參與行動 ✦ CHOOSE YOUR PLEDGE</span>
+        <h3 class="text-3xl md:text-5xl font-black text-white">成為宇宙開眼的共同發起人</h3>
+        <p class="text-slate-400 text-sm md:text-base">選擇最適合您的支持方式，讓我們一起將這雙永不閉合的巨眼推向世界之巔。</p>
+      </div>
+
+      <!-- Live Interactive Basket Calculator -->
+      <div class="glass-card p-6 rounded-2xl border border-white/10 max-w-xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left glow-amber">
+        <div>
+          <span class="text-xs text-amber-400 font-bold block mb-1">🎁 即時模擬支持金額</span>
+          <h4 class="text-lg font-bold text-white" id="calc-title">未選擇支持方案</h4>
+          <p class="text-xs text-slate-400 mt-1" id="calc-desc">點擊下方方案卡片即可自動試算您的回饋與影響力</p>
+        </div>
+        <div class="text-center">
+          <span class="text-[10px] text-slate-500 block">試算總額</span>
+          <span class="text-2xl md:text-3xl font-black text-amber-400 font-cinzel" id="calc-price">$0</span>
+          <button onclick="pledgeMockAction()" id="btn-mock-pledge" class="block w-full mt-2 px-6 py-2 rounded-full bg-slate-950 hover:bg-slate-900 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-wider transition-all">
+            模擬支持結帳 ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- Single Support Packages Grid -->
+      <div class="space-y-8">
+        <h4 class="text-xl font-bold text-white border-l-4 border-amber-500 pl-3">A. 單次支持方案（實物回饋）</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Tier 1 -->
+          <div onclick="selectTier('600', '單次支持｜凝聚第一縷星光', '支持全自動數據通訊網路初始頻寬與測試。回饋：線上開眼觀測與集資進度電子報告書。')" class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer border border-white/5 relative flex flex-col justify-between space-y-6">
+            <div class="space-y-3">
+              <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-full font-bold">輕量支持</span>
+              <h5 class="text-2xl font-black text-white font-cinzel">$600</h5>
+              <h6 class="font-bold text-amber-400">凝聚第一縷星光</h6>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                支持全自動數據通訊網路的初始頻寬與測試，為即將張開的巨眼凝聚第一道遠方訊號。
+              </p>
+              <div class="text-[11px] text-slate-400 border-t border-white/5 pt-3">
+                <strong>回饋包含：</strong>線上開眼觀測 + 集資進度電子報告書。
+              </div>
+            </div>
+            <div class="text-center">
+              <span class="text-xs font-bold text-amber-400 group-hover:underline">選擇此方案 ✨</span>
+            </div>
+          </div>
+
+          <!-- Tier 2 -->
+          <div onclick="selectTier('3600', '單次支持｜認領一片防護圓頂', '支持墨西哥 SPM 高原自動化控制圓頂與精密防護遮罩建設。回饋：帆布袋 + 電子芳名錄 + 科學人一年。')" class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer border border-white/5 relative flex flex-col justify-between space-y-6">
+            <div class="absolute -top-3 right-4 bg-amber-500 text-slate-950 text-[10px] font-black px-3 py-1 rounded-full uppercase glow-amber">最推薦</div>
+            <div class="space-y-3">
+              <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-full font-bold">中額支持</span>
+              <h5 class="text-2xl font-black text-white font-cinzel">$3,600</h5>
+              <h6 class="font-bold text-amber-400">認領一片防護圓頂</h6>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                實質支持墨西哥 SPM 高原上精密抗溫、抗風沙自動化控制圓頂與防護遮罩的鋼骨基建。
+              </p>
+              <div class="text-[11px] text-slate-400 border-t border-white/5 pt-3">
+                <strong>回饋包含：</strong>TP2m 圓頂幾何紀念帆布袋 + 墨西哥觀測站電子芳名錄 + 《科學人》雜誌 12 期與知識庫線上暢讀一年。
+              </div>
+            </div>
+            <div class="text-center">
+              <span class="text-xs font-bold text-amber-400">選擇此方案 ✨</span>
+            </div>
+          </div>
+
+          <!-- Tier 3 -->
+          <div onclick="selectTier('7200', '單次支持｜宇宙雙模尋光', '支持自動化排程程式開發。回饋：雙模式星空投影小夜燈 + 帆布袋 + 電子芳名錄 + 科學人兩年。')" class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer border border-white/5 relative flex flex-col justify-between space-y-6">
+            <div class="space-y-3">
+              <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-full font-bold">高額支持</span>
+              <h5 class="text-2xl font-black text-white font-cinzel">$7,200</h5>
+              <h6 class="font-bold text-amber-400">宇宙雙模尋光</h6>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                實質支持全自動排程軟體與通訊模組，將台灣年輕科學家直接與最前線的天體大數據綁定。
+              </p>
+              <div class="text-[11px] text-slate-400 border-t border-white/5 pt-3">
+                <strong>回饋包含：</strong>【跨太平洋雙模式星空投影小夜燈 (限定版)】 + 幾何帆布袋 + 電子芳名錄 + 《科學人》雜誌 24 期與暢讀兩年。
+              </div>
+            </div>
+            <div class="text-center">
+              <span class="text-xs font-bold text-amber-400">選擇此方案 ✨</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium VIP Tier -->
+        <div onclick="selectTier('9600', '單次支持｜開眼共同發起人（頂級個人）', '支應 2026 運抵後的精密裝配。回饋：投影燈 + 實體芳名永久刻字 + 科學家簽名複製畫 + 科學人三年。')" class="glass-card glass-card-hover p-6 rounded-2xl cursor-pointer border border-cyan-500/30 text-left flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="space-y-2 max-w-3xl">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full font-bold">頂級個人支持</span>
+              <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-bold">榮譽永久銘刻 ✦</span>
+            </div>
+            <h5 class="text-3xl font-black text-white font-cinzel">$9,600 <span class="text-sm font-normal text-slate-400">/ 開眼共同發起人</span></h5>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              直接支應 2026 年 6 月運抵墨西哥台址後的現場精密安裝與排程系統調教。
+            </p>
+            <div class="text-[11px] text-cyan-400 pt-1">
+              <strong>極致回饋：</strong>【雙模式星空投影小夜燈】 + 墨西哥實體觀測站牆面芳名永久刻字 + 開眼首拍瞬變天體影像科學級複製畫（含科學家親筆簽名與獨立編號） + 《科學人》雜誌與線上庫暢讀三年。
+            </div>
+          </div>
+          <div class="shrink-0 text-center">
+            <span class="px-6 py-3 rounded-full bg-cyan-500 text-slate-950 font-bold text-xs tracking-wider block glow-cyan">
+              認領頂級席位 ✨
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recurring Subscriptions Grid -->
+      <div class="space-y-8">
+        <h4 class="text-xl font-bold text-white border-l-4 border-cyan-400 pl-3">B. 定期定額支持（長期維運、數據高速續航）</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Rec Tier 1 -->
+          <div onclick="selectTier('300/月', '定期定額｜星光穩定頻寬', '長期支持遠端全自動控制系統基本維運。回饋：宇宙瞬變數據成果週報。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
+            <h5 class="text-xl font-bold text-white">$300<span class="text-xs text-slate-400">/ 月</span></h5>
+            <h6 class="text-xs font-bold text-cyan-400">星光穩定頻寬</h6>
+            <p class="text-[11px] text-slate-300 leading-relaxed">長期維護遠端自控系統排程頻寬，每日 10 元無痛支持科學。</p>
+            <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>週報回饋：</strong>墨西哥宇宙瞬變新鮮數據週報。</div>
+          </div>
+          <!-- Rec Tier 2 -->
+          <div onclick="selectTier('600/月', '定期定額｜數據高速續航', '長期支持數據回傳傳輸優化。回饋：週報 + 導讀講座群眾門票。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
+            <h5 class="text-xl font-bold text-white">$600<span class="text-xs text-slate-400">/ 月</span></h5>
+            <h6 class="text-xs font-bold text-cyan-400">數據高速續航</h6>
+            <p class="text-[11px] text-slate-300 leading-relaxed">支持跨太平洋數據高速回傳通訊軟體的持續更新與校正運維。</p>
+            <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>回饋：</strong>週報 + 台達電年輕天文學講座群眾專屬門票。</div>
+          </div>
+          <!-- Rec Tier 3 -->
+          <div onclick="selectTier('800/月', '定期定額｜科研人才培育', '支持接軌時數。回饋：週報 + 門票 + 星空遠距教室體驗。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
+            <h5 class="text-xl font-bold text-white">$800<span class="text-xs text-slate-400">/ 月</span></h5>
+            <h6 class="text-xs font-bold text-cyan-400">科研人才培育</h6>
+            <p class="text-[11px] text-slate-300 leading-relaxed">穩定支持台灣青年天文學家與研究生和國際觀測台址接軌交流。</p>
+            <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>回饋：</strong>週報 + 講座門票 + 專屬線上星空教室體驗一場。</div>
+          </div>
+          <!-- Rec Tier 4 -->
+          <div onclick="selectTier('1200/月', '定期定額｜十年宇宙之燈', '成為引航核心力量。回饋：週報 + 門票 + 精裝成果年報。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
+            <h5 class="text-xl font-bold text-white">$1,200<span class="text-xs text-slate-400">/ 月</span></h5>
+            <h6 class="text-xs font-bold text-cyan-400">十年宇宙之燈</h6>
+            <p class="text-[11px] text-slate-300 leading-relaxed">成為支持台灣在國際時域天文學領域中，自主命運的引航力量。</p>
+            <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>回饋：</strong>週報 + 門票 + 計畫年度成果精裝年報。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Landing Call to Action / 最後的邀請 -->
+    <section class="py-24 px-6 max-w-4xl mx-auto text-center space-y-8 border-t border-white/5">
+      <div class="w-16 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto"></div>
+      <h3 class="text-3xl md:text-5xl font-black text-white">點亮這盞宇宙之燈，我們只差臨門一腳</h3>
+      <p class="text-slate-300 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
+        你的參與，不只是捐款，而是共同發起一場「讓台灣大夢復活」的科學平權運動。當墨西哥觀測站的實體牆面上刻下你的名字，每一次圓頂在全自動排程下調轉方向、捕捉到震驚世界的宇宙新知時，你都將引以為傲——因為是你，幫台灣的年輕科學家擦亮了眼睛。
+      </p>
+      
+      <!-- Static Visual Mock Image of Reward Nightlight -->
+      <div class="glass-card rounded-2xl p-4 max-w-md mx-auto space-y-2 border border-white/10">
+        <div class="aspect-video bg-slate-950 rounded-xl flex items-center justify-center text-slate-500 text-xs relative overflow-hidden">
+          <!-- Nightlight glowing SVG inside -->
+          <svg class="w-20 h-20 text-amber-500/80 animate-pulse" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="30" fill="#f59e0b" fill-opacity="0.1" stroke="#fbbf24" stroke-width="2"/>
+            <path d="M50 20 L50 80 M20 50 L80 50" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="1"/>
+            <!-- Tiny star constellations -->
+            <circle cx="35" cy="35" r="1.5" fill="#fff" />
+            <circle cx="42" cy="45" r="1.5" fill="#fff" />
+            <circle cx="60" cy="55" r="1.5" fill="#fff" />
+          </svg>
+          <div class="absolute bottom-2 left-2 bg-slate-900/90 text-[10px] text-amber-400 px-2 py-1 rounded">
+            限定版 雙模式星空投影小夜燈
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400 text-left">實物打樣參考：霧面質感外殼，一鍵切換鹿林經典星軌與墨西哥 SPM 開鏡首拍超新星光譜，將宇宙深處的悸動永恆留在您的床頭。</p>
+      </div>
+
+      <div class="pt-4">
+        <a href="#rewards-section" class="px-12 py-5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xl font-black tracking-widest hover:scale-105 active:scale-95 transition-all inline-block glow-amber">
+          支持計畫 ✦ 寫下你的宇宙姓名
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- 2. PRESENTATION SLIDE MODE (簡報播放模式) -->
+  <!-- ============================================== -->
+  <main id="slide-container" class="hidden fixed inset-0 z-30 bg-[#060913] flex flex-col justify-between p-6 md:p-12 transition-opacity duration-500">
+    <!-- Slide Header / Context -->
+    <div class="flex justify-between items-center border-b border-white/5 pb-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">PITCH DECK</span>
+        <h3 class="text-xs text-slate-400 font-cinzel tracking-wider">TP2m PITCH PRESENTATION</h3>
+      </div>
+      <!-- Progress Indicator -->
+      <div class="text-xs text-slate-400 font-bold">
+        SLIDE <span id="slide-current" class="text-amber-400">1</span> / <span id="slide-total">7</span>
+      </div>
+    </div>
+
+    <!-- Active Slide Area (Content will transition through JS) -->
+    <div class="flex-grow flex items-center justify-center max-w-5xl mx-auto w-full my-8">
+      <div id="slide-content" class="w-full h-full flex flex-col justify-center space-y-8 animate-fade-in">
+        <!-- Dynamically injected slide templates -->
+      </div>
+    </div>
+
+    <!-- Slide Footer / Nav Controller -->
+    <div class="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 pt-4 gap-4">
+      <div class="text-xs text-slate-500 text-center sm:text-left">
+        💡 提示：您可以使用鍵盤 <span class="text-slate-300 font-bold bg-slate-900 px-1.5 py-0.5 rounded">← 鍵</span> 或 <span class="text-slate-300 font-bold bg-slate-900 px-1.5 py-0.5 rounded">→ 鍵</span> 直接控制翻頁。
+      </div>
+      <div class="flex items-center space-x-3">
+        <button onclick="prevSlide()" class="px-6 py-2 rounded-full glass-card hover:bg-slate-900 text-white font-bold text-sm transition-all">
+          上一頁 (Prev)
+        </button>
+        <button onclick="nextSlide()" class="px-8 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all glow-amber">
+          下一頁 (Next) ➔
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="relative z-10 bg-slate-950 border-t border-white/5 py-12 px-6 text-center text-slate-500 text-xs space-y-3">
+    <p>© 2026 國立中央大學天文研究所 & 《科學人》雜誌 共同發起。群眾集資顧問與推動：貝殼放大團隊。</p>
+    <p class="text-slate-600">本系統為 Demo 演示頁面。所有文字、預算占比、名人名單與回饋品設計均依循顧問敘事框架深度提煉。</p>
+  </footer>
+
+  <!-- Page Interactivity Scripts -->
+  <script>
+    // --- CANVAS STARFIELD ---
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initStars();
+    }
+
+    function initStars() {
+      stars = [];
+      const numStars = Math.floor((canvas.width * canvas.height) / 8000);
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5,
+          opacity: Math.random(),
+          speed: 0.02 + Math.random() * 0.03
+        });
+      }
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+
+        // Pulsating/Twinkling logic
+        star.opacity += star.speed;
+        if (star.opacity > 1 || star.opacity < 0.1) {
+          star.speed = -star.speed;
+        }
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    window.onload = function() {
+      resizeCanvas();
+      animateStars();
+      switchScene(1); // Load default scene in landing page
+      renderSlide();  // Initialize slide data
+    };
+
+    window.onresize = resizeCanvas;
+
+
+    // --- CUSTOM NOTIFICATION TOAST (Replaces alert) ---
+    function showNotification(title, desc) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-desc').textContent = desc;
+      
+      // Animate in
+      toast.classList.remove('translate-x-80', 'opacity-0');
+      toast.classList.add('translate-x-0', 'opacity-100');
+
+      // Animate out after 3.5 seconds
+      setTimeout(() => {
+        toast.classList.remove('translate-x-0', 'opacity-100');
+        toast.classList.add('translate-x-80', 'opacity-0');
+      }, 3500);
+    }
+
+
+    // --- MODE SWITCHER (LANDING PAGE vs SLIDE PRESENTATION) ---
+    let currentMode = 'page'; // 'page' or 'slide'
+    function switchMode(mode) {
+      currentMode = mode;
+      const pageContainer = document.getElementById('page-container');
+      const slideContainer = document.getElementById('slide-container');
+      const btnPage = document.getElementById('btn-page-mode');
+      const btnSlide = document.getElementById('btn-slide-mode');
+      const navCta = document.getElementById('nav-cta');
+
+      if (mode === 'page') {
+        slideContainer.classList.add('hidden');
+        pageContainer.classList.remove('hidden');
+        btnPage.className = "px-4 py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber";
+        btnSlide.className = "px-4 py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300";
+        navCta.classList.remove('hidden');
+        document.body.style.overflow = 'auto';
+      } else {
+        pageContainer.classList.add('hidden');
+        slideContainer.classList.remove('hidden');
+        btnSlide.className = "px-4 py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber";
+        btnPage.className = "px-4 py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300";
+        navCta.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
+        renderSlide();
+      }
+      showNotification("模式已切換", `您目前已進入「${mode === 'page' ? '集資網頁' : '簡報播放'}」模式。`);
+    }
+
+
+    // --- THREE KEY SCENES (TABS INTERACTION) ---
+    const sceneData = {
+      1: {
+        title: "倉庫裡的七千萬大夢",
+        subtitle: "Scene 01 困境（不簡單）",
+        desc: "耗資 7,279 萬、慢工磨製的非球面精密主鏡，原於 2006 年風光啟動，卻在台灣面臨高山地形搬運與連續 12 次流標的慘痛打擊，一億預算被迫收回。空有強大解析力卻無天空可看，在黑暗倉庫中積灰塵，是台灣科研最不簡單的痛。",
+        accent: "border-amber-500",
+        imgSvg: `<svg class="w-full h-48 text-amber-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>`,
+        imgDesc: "不需拍人臉，拍攝一張倉庫中被防塵布覆蓋、隱約露出精密金屬支架的望遠鏡局部特寫，極具歷史的沉沒感。"
+      },
+      2: {
+        title: "跨越半個地球的尋光之旅",
+        subtitle: "Scene 02 堅持（不容易）",
+        desc: "團隊歷年來從未停止尋找觀測台址。曾因疫情被迫放棄南美智利的合作，歷經三年艱難協商，終於在墨西哥 SPM 高原的清澈夜空下為大鏡片安了家，並送回日本完成多焦點平台升級。科學家化身為工程師與外交官，每一步都不容易。",
+        accent: "border-cyan-400",
+        imgSvg: `<svg class="w-full h-48 text-cyan-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h2m4-3.5a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+        imgDesc: "日本西村工廠內，技師正在調整精密多焦點平台的微距細節（如齒輪、光學鏡片接縫）。"
+      },
+      3: {
+        title: "重生媒體與科研大夢的共鳴",
+        subtitle: "Scene 03 行動（不放棄）",
+        desc: "當《科學人》雜誌看見中大天文所的困境，深深產生共鳴——因為《科學人》也曾面臨紙本停刊危機，在群眾集資下奇蹟重生。秉持不放棄的精神，《科學人》決定發揮倡議力量挺身而出，誓要幫台灣的天文大夢推動最後一哩路。",
+        accent: "border-emerald-400",
+        imgSvg: `<svg class="w-full h-48 text-emerald-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.168.477 4 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.168.477-4 1.253"></path></svg>`,
+        imgDesc: "一本打開的《科學人》雜誌，上方疊放著一張繪有墨西哥 SPM 觀測台址的科學手繪草圖，傳遞厚重的知識溫度。"
+      }
+    };
+
+    function switchScene(id) {
+      const data = sceneData[id];
+      const container = document.getElementById('scene-content');
+      
+      // Update Tab Button styles
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`btn-scene-${i}`);
+        if (i === id) {
+          btn.className = `w-full md:w-auto px-6 py-4 rounded-xl text-left border-l-4 ${data.accent} transition-all bg-slate-900 text-white`;
+        } else {
+          btn.className = `w-full md:w-auto px-6 py-4 rounded-xl text-left border-l-4 border-slate-700 hover:border-slate-500 transition-all bg-slate-900/40 text-slate-400 hover:text-white`;
+        }
+      }
+
+      // Transition Content
+      container.style.opacity = 0;
+      setTimeout(() => {
+        container.innerHTML = `
+          <div class="lg:w-7/12 space-y-6">
+            <span class="text-xs uppercase tracking-widest block font-extrabold text-amber-400">${data.subtitle}</span>
+            <h4 class="text-2xl md:text-3xl font-black text-white">${data.title}</h4>
+            <p class="text-sm md:text-base text-slate-300 leading-relaxed">${data.desc}</p>
+          </div>
+          <div class="lg:w-5/12 w-full flex flex-col items-center">
+            <div class="w-full aspect-[4/3] rounded-2xl bg-slate-950 border border-white/5 flex items-center justify-center p-4 relative overflow-hidden">
+              ${data.imgSvg}
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
+            </div>
+            <p class="text-xs text-slate-400 mt-3 text-center leading-relaxed">
+              <strong>[視覺建議]：</strong> ${data.imgDesc}
+            </p>
+          </div>
+        `;
+        container.style.opacity = 1;
+      }, 150);
+    }
+
+
+    // --- BEFORE AFTER IMAGE SLIDER ---
+    function handleSlider(val) {
+      const beforeLayer = document.getElementById('before-layer');
+      const handle = document.getElementById('slider-handle');
+      
+      beforeLayer.style.width = val + '%';
+      handle.style.left = val + '%';
+    }
+
+
+    // --- LIVE REWARDS PACKAGE CALCULATOR ---
+    let selectedTierData = null;
+
+    function selectTier(price, title, desc) {
+      selectedTierData = { price, title, desc };
+      
+      document.getElementById('calc-title').textContent = title;
+      document.getElementById('calc-desc').textContent = desc;
+      
+      // Handle formatting
+      if(price.includes('/月')) {
+        document.getElementById('calc-price').textContent = `$${price}`;
+      } else {
+        document.getElementById('calc-price').textContent = `$${parseInt(price).toLocaleString()}`;
+      }
+
+      // Visual Glow trigger
+      const calcRoot = document.getElementById('calc-title').parentElement.parentElement;
+      calcRoot.classList.add('scale-[1.02]');
+      setTimeout(() => {
+        calcRoot.classList.remove('scale-[1.02]');
+      }, 200);
+
+      showNotification("方案已更新", `您已選擇「${title}」進行模擬。`);
+    }
+
+    function pledgeMockAction() {
+      if(!selectedTierData) {
+        showNotification("提示", "請先點擊下方任一支持方案卡片來進行模擬！");
+        return;
+      }
+      showNotification(
+        "🎉 支持成功 (模擬)", 
+        `感謝您認領：${selectedTierData.title}！這是重建台灣科研尊嚴的關鍵第一步。`
+      );
+    }
+
+
+    // ==============================================
+    // 3. PRESENTATION SLIDES GENERATOR & CONTROLLER
+    // ==============================================
+    let currentSlideIndex = 0;
+    const slides = [
+      {
+        title: "群眾集資是分配社會資源的平權運動",
+        subtitle: "顧問總監引言 ✦ TP2m 重生計畫",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-7 space-y-6">
+              <p class="text-xl md:text-2xl text-slate-300 leading-relaxed font-light">
+                「群眾集資從來不是乞討，而是一場邀請大眾共同分配社會資源的平權運動。」
+              </p>
+              <div class="border-l-4 border-amber-500 pl-4 py-1">
+                <p class="text-sm text-slate-400">這是一個代表台灣百年天文大夢的精密兩米望遠鏡。</p>
+                <p class="text-sm text-slate-400">它背負著十多年前的歷史遺憾與 7,279 萬元的沈默成本，但也握有打破地理限制、重奪國際科研發言權的黃金門票。</p>
+              </div>
+            </div>
+            <div class="md:col-span-5 bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-4">
+              <span class="text-xs text-amber-400 font-bold block">💡 核心顧問任務</span>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                將這個看似高冷的硬核天文科研計畫，轉譯成一場<strong>「全台灣人一起在世界屋脊點亮宇宙之燈」</strong>的熱血行動。
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "核心敘事錨點：PUSTV 邏輯",
+        subtitle: "五大故事結構 ✦ 建立說服大眾的基礎",
+        content: `
+          <div class="grid grid-cols-5 gap-4">
+            <div class="glass-card p-4 rounded-xl space-y-2 border-t-4 border-red-500">
+              <span class="text-xs text-red-400 font-bold block">P - Problem 最痛缺口</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed">耗資 7,279 萬的鏡片，因流標被迫沉睡，科學家只能下載國外二手舊數據。</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2 border-t-4 border-blue-400">
+              <span class="text-xs text-blue-400 font-bold block">U - Solution 解決方案</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed">跨越太平洋，落腳墨西哥頂級觀測台址，將「永不閉合的眼」推向世界。</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2 border-t-4 border-amber-400">
+              <span class="text-xs text-amber-400 font-bold block">S - Uniqueness 獨特價值</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed">首創 55% 境外國際台址絕對主導權，警報響起能在 3 小時內自主調鏡指認。</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2 border-t-4 border-cyan-400">
+              <span class="text-xs text-cyan-400 font-bold block">T - Trust 專業信賴</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed">深耕 30 年的中大天文團隊，攜手群眾集資重生奇蹟的《科學人》雜誌。</p>
+            </div>
+            <div class="glass-card p-4 rounded-xl space-y-2 border-t-4 border-emerald-400">
+              <span class="text-xs text-emerald-400 font-bold block">V - Value 美好改變</span>
+              <p class="text-[11px] text-slate-300 leading-relaxed">贏回台灣學子無價科研尊嚴，在課堂上直接遠端遙控最完美的美洲夜空。</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "三個現場：從倉庫到墨西哥世界屋脊",
+        subtitle: "看見現場 ✦ 故事與情感共鳴",
+        content: `
+          <div class="grid grid-cols-3 gap-6">
+            <div class="p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-3">
+              <span class="text-xs text-amber-400 font-bold block">Scene 01 / 倉庫中的沉寂</span>
+              <h5 class="text-white font-bold text-sm">【倉庫裡的七千萬大夢】</h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                2006年風光啟動，卻面臨高山地形搬運與12次流標。空有強大解析力，卻無天空可看。
+              </p>
+            </div>
+            <div class="p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-3">
+              <span class="text-xs text-cyan-400 font-bold block">Scene 02 / 尋光之路的艱辛</span>
+              <h5 class="text-white font-bold text-sm">【跨越半個地球尋家】</h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                歷經三年艱難談判，克服智利疫情流局，成功把主鏡送往日本升級、在墨西哥找到星空。
+              </p>
+            </div>
+            <div class="p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-3">
+              <span class="text-xs text-emerald-400 font-bold block">Scene 03 / 重生的精神共鳴</span>
+              <h5 class="text-white font-bold text-sm">【《科學人》倡議挺身】</h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                同樣歷經紙本停刊危機、《科學人》在集資中重生，因此深深共鳴、共同推進最後一步。
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "為什麼是我們？科學實力與國際話語權",
+        subtitle: "實績與推薦 ✦ 打造無可替代的主導權",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+              <h5 class="text-amber-400 font-bold text-sm">✦ 實戰大數據掌控力：</h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                中央大學天文研究所自主發現台灣第一顆小行星與彗星，是台灣唯一參與「泛星計畫」與智利魯賓天文台「LSST計畫」的頂尖團隊。
+              </p>
+              <h5 class="text-cyan-400 font-bold text-sm">✦ 時域天文學自主發言權：</h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                別人的募款是買既有制度。我們的募款，是讓閒置的台灣大夢復活。宇宙爆發第一時間，台灣科學家擁有立刻調鏡指認天體的權利。
+              </p>
+            </div>
+            <div class="glass-card p-5 rounded-2xl space-y-3">
+              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">強大推薦陣容：</span>
+              <div class="text-xs text-slate-300 italic leading-relaxed">
+                「點亮這盞燈，就是點亮台灣下一代看世界、看未來的眼界。」—— 孫維新（《科學人》總編輯）
+              </div>
+              <div class="text-xs text-slate-300 italic leading-relaxed">
+                「攀登科研的高山比現實更艱難，12次流標沒有擊倒他們，我們更該拉一把。」—— 江秀真（台灣知名登山家）
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "階段里程碑與科學資金去向",
+        subtitle: "融資與分配 ✦ 顧問專業把關",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div class="md:col-span-7 space-y-4">
+              <h5 class="text-white text-sm font-bold">集資目標階段里程碑 (共 $3,000 萬元)</h5>
+              <div class="space-y-3 text-xs">
+                <div class="flex justify-between border-b border-white/5 pb-1">
+                  <span class="text-amber-400">第一階段：基本生存線 ($1,000 萬)</span>
+                  <span class="text-slate-300">連動控制自驅軟體</span>
+                </div>
+                <div class="flex justify-between border-b border-white/5 pb-1">
+                  <span class="text-amber-400">第二階段：穩定運行線 ($2,000 萬)</span>
+                  <span class="text-slate-300">數據高速傳輸與電力</span>
+                </div>
+                <div class="flex justify-between border-b border-white/5 pb-1">
+                  <span class="text-amber-400">第三階段：理想願景線 ($3,000 萬)</span>
+                  <span class="text-slate-300">精密遮罩本體、星空教室</span>
+                </div>
+              </div>
+            </div>
+            <div class="md:col-span-5 bg-slate-900/60 p-5 rounded-2xl space-y-4">
+              <span class="text-xs text-cyan-400 font-bold block">每一分錢的嚴謹分配：</span>
+              <ul class="text-[11px] text-slate-300 space-y-2">
+                <li class="flex justify-between"><span>圓頂與遮罩硬體 (寬度)：</span><strong class="text-white">60%</strong></li>
+                <li class="flex justify-between"><span>運維與排程程式 (厚度)：</span><strong class="text-white">25%</strong></li>
+                <li class="flex justify-between"><span>大眾科普與回饋 (長度)：</span><strong class="text-white">10%</strong></li>
+                <li class="flex justify-between"><span>行政審計與行政費用：</span><strong class="text-white">5%</strong></li>
+              </ul>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "參與行動：精緻實物回饋與支持階梯",
+        subtitle: "回饋品設定 ✦ 給支持者的最高敬意",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-3">
+              <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-1">
+                <h6 class="text-xs font-bold text-amber-400">✦ 限定版：雙模式星空投影小夜燈</h6>
+                <p class="text-[10px] text-slate-300 leading-relaxed">
+                  霧面親膚、一鍵切換。內置「台灣經典鹿林星空軌道」與「墨西哥開鏡首拍超新星」高解析光譜卡，將宇宙奧秘實體化。
+                </p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-950 border border-white/5 space-y-1">
+                <h6 class="text-xs font-bold text-cyan-400">✦ 知識資產暢讀方案</h6>
+                <p class="text-[10px] text-slate-300 leading-relaxed">
+                  搭配《科學人》全文影音知識庫線上無限暢讀，將科學前沿探索深埋於日常之中。
+                </p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <span class="text-xs text-slate-400 font-bold uppercase">支持級距概覽：</span>
+              <div class="text-[11px] text-slate-300 space-y-1 bg-slate-900/60 p-4 rounded-xl">
+                <div>• $600 - 開眼電子進度報告</div>
+                <div>• $3,600 - 帆布袋 + 電子芳名錄 + 科學人一年</div>
+                <div>• $7,200 - 雙模投影燈 + 科學人兩年</div>
+                <div>• $9,600 - 實體觀測站永久刻字 + 投影燈 + 科學人三年</div>
+                <div>• 定期定額 - $300~$1,200/月 (長期數據維運支持)</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "一起推最後一把，點亮台灣宇宙之燈",
+        subtitle: "結語與邀請 ✦ 共同寫下太空歷史",
+        content: `
+          <div class="text-center space-y-6 max-w-2xl mx-auto">
+            <p class="text-lg md:text-xl text-slate-200 leading-relaxed font-light">
+              當墨西哥觀測站的實體牆面上刻下支持者的名字，每一次全自動圓頂調轉方向、捕捉到超新星爆發時，
+            </p>
+            <p class="text-2xl font-black text-amber-400 tracking-wider">
+              全台灣人都將引以為傲 —— 因為是我們，擦亮了台灣學子的雙眼。
+            </p>
+            <div class="pt-6">
+              <button onclick="switchMode('page')" class="px-8 py-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black tracking-widest text-sm hover:scale-105 active:scale-95 transition-all glow-amber">
+                ➔ 進入網頁，體驗完整 Demo 頁面
+              </button>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    document.getElementById('slide-total').textContent = slides.length;
+
+    function renderSlide() {
+      const slide = slides[currentSlideIndex];
+      const slideContent = document.getElementById('slide-content');
+      document.getElementById('slide-current').textContent = currentSlideIndex + 1;
+
+      slideContent.style.opacity = 0;
+      setTimeout(() => {
+        slideContent.innerHTML = `
+          <div class="space-y-2">
+            <span class="text-xs tracking-widest uppercase font-extrabold text-amber-400 block">${slide.subtitle}</span>
+            <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight">${slide.title}</h2>
+          </div>
+          <div class="pt-4 flex-grow flex items-center justify-center">
+            <div class="w-full">
+              ${slide.content}
+            </div>
+          </div>
+        `;
+        slideContent.style.opacity = 1;
+      }, 150);
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < slides.length - 1) {
+        currentSlideIndex++;
+        renderSlide();
+      } else {
+        showNotification("簡報播放完畢", "已到簡報最後一頁，謝謝您的觀看！");
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        renderSlide();
+      }
+    }
+
+    // Keyboard Arrow Keys support for Slide Mode
+    document.addEventListener('keydown', function(event) {
+      if (currentMode === 'slide') {
+        if (event.key === 'ArrowRight' || event.key === ' ') {
+          nextSlide();
+        } else if (event.key === 'ArrowLeft') {
+          prevSlide();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
