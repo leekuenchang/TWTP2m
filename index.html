@@ -116,27 +116,18 @@
       </div>
     </div>
 
-    <!-- Mode Selector & Action Buttons -->
-    <div class="flex items-center space-x-2 md:space-x-4">
-      <div class="bg-slate-950/80 p-1 rounded-full border border-white/10 flex items-center text-xs">
-        <button id="btn-page-mode" onclick="switchMode('page')" class="px-3 py-1 md:px-4 md:py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300">
-          集資網頁
-        </button>
-        <button id="btn-slide-mode" onclick="switchMode('slide')" class="px-3 py-1 md:px-4 md:py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber">
-          簡報播放 🎬
-        </button>
-      </div>
-
-      <a href="#rewards-section" id="nav-cta" class="hidden md:inline-flex px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-sm tracking-wide transition-all hover:scale-105 active:scale-95 glow-amber">
+    <!-- Action Buttons -->
+    <div>
+      <a href="#rewards-section" class="px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-sm tracking-wide transition-all hover:scale-105 active:scale-95 glow-amber">
         立即支持
       </a>
     </div>
   </header>
 
   <!-- ============================================== -->
-  <!-- 1. LANDING PAGE MODE (集資網頁模式) -->
+  <!-- Crowdfunding Landing Page -->
   <!-- ============================================== -->
-  <main id="page-container" class="hidden relative z-10 pt-24 pb-24 transition-opacity duration-500">
+  <main id="page-container" class="relative z-10 pt-24 pb-24 transition-opacity duration-500">
     
     <!-- Hero / 首屏 -->
     <section class="relative min-h-[90vh] flex items-center justify-center px-6 py-12 md:py-24">
@@ -395,7 +386,7 @@
             中央大學天文研究所與鹿林天文台，曾利用一米望遠鏡自主發現台灣第一顆小行星與第一顆彗星，更是台灣唯一參與國際「泛星計畫」與智利魯賓天文台「LSST 計畫」的頂尖團隊。我們具備豐富的實戰數據掌控力，這次將用 7,279 萬元的既有硬體基礎，撬動國際頂級台址的絕對主導權。
           </p>
           <div class="p-4 bg-amber-500/5 rounded-xl border border-amber-500/20 text-xs text-amber-400 leading-relaxed">
-            <strong>✦ 獨家優勢：</strong>別人的募款是在買既有制度，我們的募款是讓閒置的台灣大夢在世界最美夜空下復活。TP2m 讓台灣在國際尖端「時域天文學」中擁有絕對的自主排程權，當黑洞或重力波爆發，我們擁有立刻指認變化天體的主導權。
+            <strong>✦ 獨家優勢：</strong>別人的募款是在買既有制度，我們的募款是讓閒置的台灣大夢在世界最美夜空下復活。TP2m 讓台灣在國際尖端「時域天文學」中擁有絕對的自主排程權，當黑洞 or 重力波爆發，我們擁有立刻指認變化天體的主導權。
           </div>
         </div>
 
@@ -802,14 +793,14 @@
           <div onclick="selectTier('800/月', '定期定額｜科研人才培育', '支持接軌時數。回饋：週報 + 門票 + 星空遠距教室體驗。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
             <h5 class="text-xl font-bold text-white">$800<span class="text-xs text-slate-400">/ 月</span></h5>
             <h6 class="text-xs font-bold text-cyan-400">科研人才培育</h6>
-            <p class="text-[11px] text-slate-300 leading-relaxed">穩定支持台灣青年天文學家與研究生和國際觀測台址接軌交流。</p>
+            <p class="text-[11px] text-slate-300 leading-relaxed">穩定支持台灣青年天文學家與研究生 and 國際觀測台址接軌交流。</p>
             <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>回饋：</strong>週報 + 講座門票 + 專屬線上星空教室體驗一場。</div>
           </div>
           <!-- Rec Tier 4 -->
           <div onclick="selectTier('1200/月', '定期定額｜十年宇宙之燈', '成為引航核心力量。回饋：週報 + 門票 + 精裝成果年報。')" class="glass-card glass-card-hover p-5 rounded-2xl cursor-pointer border border-white/5 space-y-4">
             <h5 class="text-xl font-bold text-white">$1,200<span class="text-xs text-slate-400">/ 月</span></h5>
             <h6 class="text-xs font-bold text-cyan-400">十年宇宙之燈</h6>
-            <p class="text-[11px] text-slate-300 leading-relaxed">成為支持台灣在國際時域天文學領域中，自主命運的引航力量。</p>
+            <p class="text-[11px] text-slate-300 leading-relaxed">成為支持台灣在國際時域天文學領域中，自主命命運的引航力量。</p>
             <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5"><strong>回饋：</strong>週報 + 門票 + 計畫年度成果精裝年報。</div>
           </div>
         </div>
@@ -847,45 +838,6 @@
       </div>
     </section>
 
-  </main>
-
-  <!-- ============================================== -->
-  <!-- 2. PRESENTATION SLIDE MODE (簡報播放模式) -->
-  <!-- ============================================== -->
-  <main id="slide-container" class="fixed inset-0 z-30 bg-[#060913] flex flex-col justify-between p-4 md:p-12 transition-opacity duration-500">
-    <!-- Slide Header / Context -->
-    <div class="flex justify-between items-center border-b border-white/5 pb-4 mt-16 md:mt-0">
-      <div class="flex items-center space-x-2">
-        <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">PITCH DECK</span>
-        <h3 class="text-xs text-slate-400 font-cinzel tracking-wider hidden sm:block">TP2m PITCH PRESENTATION</h3>
-      </div>
-      <!-- Progress Indicator -->
-      <div class="text-xs text-slate-400 font-bold">
-        SLIDE <span id="slide-current" class="text-amber-400">1</span> / <span id="slide-total">8</span>
-      </div>
-    </div>
-
-    <!-- Active Slide Area with vertical overflow scroll fallback for mobile adaptive -->
-    <div class="flex-grow flex items-center justify-center max-w-5xl mx-auto w-full my-4 md:my-8 overflow-y-auto no-scrollbar max-h-[calc(100vh-180px)]">
-      <div id="slide-content" class="w-full h-full flex flex-col justify-center space-y-4 md:space-y-8 animate-fade-in p-2">
-        <!-- Dynamically injected slide templates -->
-      </div>
-    </div>
-
-    <!-- Slide Footer / Nav Controller -->
-    <div class="flex flex-col sm:flex-row justify-between items-center border-t border-white/5 pt-4 gap-4">
-      <div class="text-[10px] md:text-xs text-slate-500 text-center sm:text-left">
-        💡 提示：支援鍵盤 <span class="text-slate-300 font-bold bg-slate-900 px-1 py-0.5 rounded">← / →</span>，手機看可直接<strong>「左右輕滑螢幕」</strong>翻頁。
-      </div>
-      <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
-        <button onclick="prevSlide()" class="px-5 py-2 rounded-full glass-card hover:bg-slate-900 text-white font-bold text-xs md:text-sm transition-all flex-1 sm:flex-initial text-center">
-          上一頁 (Prev)
-        </button>
-        <button onclick="nextSlide()" class="px-7 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs md:text-sm transition-all glow-amber flex-1 sm:flex-initial text-center">
-          下一頁 (Next) ➔
-        </button>
-      </div>
-    </div>
   </main>
 
   <!-- Global Footer -->
@@ -951,35 +903,6 @@
         toast.classList.remove('translate-x-0', 'opacity-100');
         toast.classList.add('translate-x-80', 'opacity-0');
       }, 3500);
-    }
-
-    // --- MODE SWITCHER (LANDING PAGE vs SLIDE PRESENTATION) ---
-    let currentMode = 'slide'; // 'slide' is now prioritized on startup
-
-    function switchMode(mode) {
-      currentMode = mode;
-      const pageContainer = document.getElementById('page-container');
-      const slideContainer = document.getElementById('slide-container');
-      const btnPage = document.getElementById('btn-page-mode');
-      const btnSlide = document.getElementById('btn-slide-mode');
-      const navCta = document.getElementById('nav-cta');
-
-      if (mode === 'page') {
-        slideContainer.classList.add('hidden');
-        pageContainer.classList.remove('hidden');
-        btnPage.className = "px-3 py-1 md:px-4 md:py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber";
-        btnSlide.className = "px-3 py-1 md:px-4 md:py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300";
-        navCta.classList.remove('hidden');
-        document.body.style.overflow = 'auto';
-      } else {
-        pageContainer.classList.add('hidden');
-        slideContainer.classList.remove('hidden');
-        btnSlide.className = "px-3 py-1 md:px-4 md:py-1.5 rounded-full font-bold transition-all duration-300 bg-amber-500 text-slate-950 glow-amber";
-        btnPage.className = "px-3 py-1 md:px-4 md:py-1.5 rounded-full font-medium text-slate-400 hover:text-white transition-all duration-300";
-        navCta.classList.add('hidden');
-        document.body.style.overflow = 'hidden';
-        renderSlide();
-      }
     }
 
     // --- THREE KEY SCENES (TABS INTERACTION) ---
@@ -1157,312 +1080,11 @@
       }, 7500);
     }
 
-    // ==============================================
-    // 3. PRESENTATION SLIDES GENERATOR & CONTROLLER
-    // ==============================================
-    let currentSlideIndex = 0;
-    const slides = [
-      {
-        title: "群眾集資是分配社會資源的平權運動",
-        subtitle: "顧問總監引言 ✦ TP2m 重生計畫",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
-            <div class="md:col-span-7 space-y-4 md:space-y-6">
-              <p class="text-base md:text-2xl text-slate-300 leading-relaxed font-light">
-                「群眾集資從來不是乞討，而是一場邀請大眾共同分配社會資源的平權運動。」
-              </p>
-              <div class="border-l-4 border-amber-500 pl-4 py-1 space-y-1">
-                <p class="text-xs md:text-sm text-slate-400">這是一個代表台灣百年天文大夢的精密兩米望遠鏡。</p>
-                <p class="text-xs md:text-sm text-slate-400">它背負著十多年前的歷史遺憾與 7,279 萬元的沈默成本，但也握有打破地理限制、重奪國際科研發言權的黃金門票。</p>
-              </div>
-            </div>
-            <div class="md:col-span-5 bg-slate-900/60 p-4 md:p-6 rounded-2xl border border-white/5 space-y-2 md:space-y-4">
-              <span class="text-xs text-amber-400 font-bold block">💡 核心顧問任務</span>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                將這個看似高冷的硬核天文科研計畫，轉譯成一場<strong>「全台灣人一起在世界屋脊點亮宇宙之燈」</strong>的熱血行動。
-              </p>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "核心敘事錨點：PUSTV 邏輯",
-        subtitle: "五大故事結構 ✦ 建立說服大眾的基礎",
-        content: `
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
-            <div class="glass-card p-3 md:p-4 rounded-xl space-y-1.5 border-t-4 border-red-500">
-              <span class="text-[10px] md:text-xs text-red-400 font-bold block">P - Problem 缺口</span>
-              <p class="text-[9px] md:text-xs text-slate-300 leading-relaxed">耗資 7,279 萬的主鏡因流標沉睡倉庫，科學家只能下載二手數據。</p>
-            </div>
-            <div class="glass-card p-3 md:p-4 rounded-xl space-y-1.5 border-t-4 border-blue-400">
-              <span class="text-[10px] md:text-xs text-blue-400 font-bold block">U - Solution 方案</span>
-              <p class="text-[9px] md:text-xs text-slate-300 leading-relaxed">跨越太平洋落腳墨西哥頂級高原台址，將永不閉合的眼推向世界。</p>
-            </div>
-            <div class="glass-card p-3 md:p-4 rounded-xl space-y-1.5 border-t-4 border-amber-400">
-              <span class="text-[10px] md:text-xs text-amber-400 font-bold block">S - Uniqueness 獨特</span>
-              <p class="text-[9px] md:text-xs text-slate-300 leading-relaxed">取得 55% 絕對觀測主導權，當天體爆發能在第一時間自主調鏡指認。</p>
-            </div>
-            <div class="glass-card p-3 md:p-4 rounded-xl space-y-1.5 border-t-4 border-cyan-400">
-              <span class="text-[10px] md:text-xs text-cyan-400 font-bold block">T - Trust 信任</span>
-              <p class="text-[9px] md:text-xs text-slate-300 leading-relaxed">由深耕30年的中央大學團隊領軍，攜手集資重生奇蹟的《科學人》。</p>
-            </div>
-            <div class="glass-card p-3 md:p-4 rounded-xl space-y-1.5 border-t-4 border-emerald-400 col-span-2 sm:col-span-1">
-              <span class="text-[10px] md:text-xs text-emerald-400 font-bold block">V - Value 價值</span>
-              <p class="text-[9px] md:text-xs text-slate-300 leading-relaxed">點亮 10 年不熄滅宇宙之燈，讓學子贏回尊嚴、在課堂即時控鏡。</p>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "三個現場：從倉庫到墨西哥世界屋脊",
-        subtitle: "看見現場 ✦ 故事與情感共鳴",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <div class="p-4 md:p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-2">
-              <span class="text-xs text-amber-400 font-bold block">Scene 01 / 倉庫中的沉寂</span>
-              <h5 class="text-white font-bold text-xs md:text-sm">【倉庫裡的七千萬大夢】</h5>
-              <p class="text-[11px] md:text-xs text-slate-300 leading-relaxed">
-                2006年風光啟動，卻面臨高山地形搬運與12次流標。空有強大解析力，卻無天空可看。
-              </p>
-            </div>
-            <div class="p-4 md:p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-2">
-              <span class="text-xs text-cyan-400 font-bold block">Scene 02 / 尋光之路的艱辛</span>
-              <h5 class="text-white font-bold text-xs md:text-sm">【跨越半個地球尋家】</h5>
-              <p class="text-[11px] md:text-xs text-slate-300 leading-relaxed">
-                歷經三年艱難談判，克服智利疫情流局，成功把主鏡送往日本升級、在墨西哥找到星空。
-              </p>
-            </div>
-            <div class="p-4 md:p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-2">
-              <span class="text-xs text-emerald-400 font-bold block">Scene 03 / 重生的精神共鳴</span>
-              <h5 class="text-white font-bold text-xs md:text-sm">【《科學人》倡議挺身】</h5>
-              <p class="text-[11px] md:text-xs text-slate-300 leading-relaxed">
-                同樣歷經紙本停刊危機、《科學人》在集資中重生，因此深深共鳴、共同推進最後一步。
-              </p>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "為什麼是我們？科學實力與國際話語權",
-        subtitle: "實績與推薦 ✦ 打造無可替代的主導權",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-            <div class="space-y-3 md:space-y-4">
-              <h5 class="text-amber-400 font-bold text-xs md:text-sm">✦ 實戰大數據掌控力：</h5>
-              <p class="text-[11px] md:text-xs text-slate-300 leading-relaxed">
-                中央大學天文研究所自主發現台灣第一顆小行星與彗星，是台灣唯一參與「泛星計畫」與智利魯賓天文台「LSST計畫」的頂尖團隊。
-              </p>
-              <h5 class="text-cyan-400 font-bold text-xs md:text-sm">✦ 時域天文學自主發言權：</h5>
-              <p class="text-[11px] md:text-xs text-slate-300 leading-relaxed">
-                別人的募款是買既有制度。我們的募款，是讓閒置的台灣大夢復活。宇宙爆發第一時間，台灣科學家擁有立刻調鏡指認天體的權利。
-              </p>
-            </div>
-            <div class="glass-card p-4 md:p-5 rounded-2xl space-y-2.5">
-              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">強大推薦陣容：</span>
-              <div class="text-[11px] md:text-xs text-slate-300 italic leading-relaxed">
-                「點亮這盞燈，就是點亮台灣下一代看世界、看未來的眼界。」—— 孫維新（《科學人》總編輯）
-              </div>
-              <div class="text-[11px] md:text-xs text-slate-300 italic leading-relaxed">
-                「攀登科研的高山比現實更艱難，12次流標沒有擊倒他們，我們更該拉一把。」—— 江秀真（台灣知名登山家）
-              </div>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "即時展示 ✦ 8-bit SPM 觀測站模擬",
-        subtitle: "視覺配圖建議 ➔ 像素動態模擬展示",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
-            <div class="md:col-span-7 space-y-2 md:space-y-4">
-              <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
-                我們在網頁中部署了一個<strong>互動式 8-bit SPM 觀測站模擬</strong>，可以一鍵爆發超新星天體警報，當場演示 55% 優先權與 3 小時內全自動排程調鏡：
-              </p>
-              <ul class="text-[11px] md:text-xs text-slate-400 space-y-1.5 list-disc list-inside">
-                <li><strong class="text-amber-400">瞬間回應：</strong> 模擬從全球警報至鏡頭切換對準</li>
-                <li><strong class="text-cyan-400">尊嚴自主：</strong> 擺脫下載國外「挑剩的二手大數據」窘境</li>
-                <li><strong class="text-emerald-400">科普教室：</strong> 讓支持者體驗與年輕天文學子並肩作戰</li>
-              </ul>
-            </div>
-            <div class="md:col-span-5 bg-slate-900 border border-emerald-500/20 p-4 md:p-6 rounded-2xl text-center">
-              <span class="text-[10px] md:text-xs text-emerald-400 font-mono block mb-1">✦ CO-CONSOLE INTERACTION ✦</span>
-              <p class="text-[11px] text-slate-300 italic">「已完美集成於網頁模式中，可用於發表會或與支持者互動時現場點擊展示運轉。」</p>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "階段里程碑與科學資金去向",
-        subtitle: "融資與分配 ✦ 顧問專業把關",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-            <div class="md:col-span-7 space-y-3">
-              <h5 class="text-white text-xs md:text-sm font-bold">集資目標階段里程碑 (共 $3,000 萬元)</h5>
-              <div class="space-y-2.5 text-[11px] md:text-xs">
-                <div class="flex justify-between border-b border-white/5 pb-1 gap-2">
-                  <span class="text-amber-400">第一階段：基本生存線 ($1,000 萬)</span>
-                  <span class="text-slate-300">連動控制自驅軟體</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-1 gap-2">
-                  <span class="text-amber-400">第二階段：穩定運行線 ($2,000 萬)</span>
-                  <span class="text-slate-300">數據高速傳輸與電力</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-1 gap-2">
-                  <span class="text-amber-400">第三階段：理想願景線 ($3,000 萬)</span>
-                  <span class="text-slate-300">精密遮罩本體、星空教室</span>
-                </div>
-              </div>
-            </div>
-            <div class="md:col-span-5 bg-slate-900/60 p-4 md:p-5 rounded-2xl space-y-3">
-              <span class="text-xs text-cyan-400 font-bold block">每一分錢的嚴謹分配：</span>
-              <ul class="text-[10px] md:text-xs text-slate-300 space-y-1.5">
-                <li class="flex justify-between"><span>圓頂與遮罩硬體 (寬度)：</span><strong class="text-white">60%</strong></li>
-                <li class="flex justify-between"><span>運維與排程程式 (厚度)：</span><strong class="text-white">25%</strong></li>
-                <li class="flex justify-between"><span>大眾科普與回饋 (長度)：</span><strong class="text-white">10%</strong></li>
-                <li class="flex justify-between"><span>行政與審計雜支費用：</span><strong class="text-white">5%</strong></li>
-              </ul>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "參與行動：精緻實物回饋與支持階梯",
-        subtitle: "回饋品設定 ✦ 給支持者的最高敬意",
-        content: `
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-            <div class="space-y-3">
-              <div class="p-3 md:p-4 rounded-xl bg-slate-950 border border-white/5 space-y-1">
-                <h6 class="text-xs font-bold text-amber-400">✦ 限定版：雙模式星空投影小夜燈</h6>
-                <p class="text-[10px] md:text-xs text-slate-300 leading-relaxed">
-                  霧面親膚、一鍵切換。內置「台灣經典鹿林星空軌道」與「墨西哥開鏡首拍超新星」高解析光譜卡，將宇宙奧秘實體化。
-                </p>
-              </div>
-              <div class="p-3 md:p-4 rounded-xl bg-slate-950 border border-white/5 space-y-1">
-                <h6 class="text-xs font-bold text-cyan-400">✦ 知識資產暢讀方案</h6>
-                <p class="text-[10px] md:text-xs text-slate-300 leading-relaxed">
-                  搭配《科學人》全文影音知識庫線上無限暢讀，將科學前沿探索深埋於日常之中。
-                </p>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <span class="text-xs text-slate-400 font-bold uppercase block">支持級距概覽：</span>
-              <div class="text-[10px] md:text-xs text-slate-300 space-y-1 bg-slate-900/60 p-3 md:p-4 rounded-xl">
-                <div>• $600 - 開眼電子進度報告</div>
-                <div>• $3,600 - 帆布袋 + 電子芳名錄 + 科學人一年</div>
-                <div>• $7,200 - 雙模投影燈 + 科學人兩年</div>
-                <div>• $9,600 - 實體觀測站永久刻字 + 投影燈 + 科學人三年</div>
-                <div>• 定期定額 - $300~$1,200/月 (長期數據維運支持)</div>
-              </div>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "一起推最後一把，點亮台灣宇宙之燈",
-        subtitle: "結語與邀請 ✦ 共同寫下太空歷史",
-        content: `
-          <div class="text-center space-y-4 md:space-y-6 max-w-2xl mx-auto">
-            <p class="text-sm md:text-xl text-slate-200 leading-relaxed font-light">
-              當墨西哥觀測站的實體牆面上刻下支持者的名字，每一次全自動圓頂調轉方向、捕捉到超新星爆發時，
-            </p>
-            <p class="text-lg md:text-2xl font-black text-amber-400 tracking-wider">
-              全台灣人都將引以為傲 —— 因為是我們，擦亮了台灣學子的雙眼。
-            </p>
-            <div class="pt-4 md:pt-6">
-              <button onclick="switchMode('page')" class="px-6 py-2.5 md:px-8 md:py-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black tracking-widest text-xs md:text-sm hover:scale-105 active:scale-95 transition-all glow-amber">
-                ➔ 進入網頁，體驗完整集資頁面
-              </button>
-            </div>
-          </div>
-        `
-      }
-    ];
-
-    document.getElementById('slide-total').textContent = slides.length;
-
-    function renderSlide() {
-      const slide = slides[currentSlideIndex];
-      const slideContent = document.getElementById('slide-content');
-      document.getElementById('slide-current').textContent = currentSlideIndex + 1;
-
-      slideContent.style.opacity = 0;
-      setTimeout(() => {
-        slideContent.innerHTML = `
-          <div class="space-y-1">
-            <span class="text-[10px] md:text-xs tracking-widest uppercase font-extrabold text-amber-400 block">${slide.subtitle}</span>
-            <h2 class="text-lg md:text-3xl font-black text-white tracking-tight">${slide.title}</h2>
-          </div>
-          <div class="pt-2 md:pt-4 flex-grow flex items-center justify-center">
-            <div class="w-full">
-              ${slide.content}
-            </div>
-          </div>
-        `;
-        slideContent.style.opacity = 1;
-      }, 150);
-    }
-
-    function nextSlide() {
-      if (currentSlideIndex < slides.length - 1) {
-        currentSlideIndex++;
-        renderSlide();
-      } else {
-        showNotification("簡報播放完畢", "已到簡報最後一頁，謝謝您的觀看！");
-      }
-    }
-
-    function prevSlide() {
-      if (currentSlideIndex > 0) {
-        currentSlideIndex--;
-        renderSlide();
-      }
-    }
-
-    // Keyboard Arrow Keys support for Slide Mode
-    document.addEventListener('keydown', function(event) {
-      if (currentMode === 'slide') {
-        if (event.key === 'ArrowRight' || event.key === ' ') {
-          nextSlide();
-        } else if (event.key === 'ArrowLeft') {
-          prevSlide();
-        }
-      }
-    });
-
-    // --- MOBILE TOUCH SWIPE GESTURES ---
-    let touchstartX = 0;
-    let touchendX = 0;
-    const slideContainer = document.getElementById('slide-container');
-
-    slideContainer.addEventListener('touchstart', function(event) {
-      touchstartX = event.changedTouches[0].screenX;
-    }, { passive: true });
-
-    slideContainer.addEventListener('touchend', function(event) {
-      touchendX = event.changedTouches[0].screenX;
-      handleGesture();
-    }, { passive: true });
-
-    function handleGesture() {
-      if (currentMode !== 'slide') return;
-      
-      const swipeDistanceThreshold = 50; // Minimum distance in pixels to trigger slide
-      if (touchendX < touchstartX - swipeDistanceThreshold) {
-        // Swiped Left -> Load next slide
-        nextSlide();
-      }
-      if (touchendX > touchstartX + swipeDistanceThreshold) {
-        // Swiped Right -> Load previous slide
-        prevSlide();
-      }
-    }
-
     // On Load Initialization
     window.onload = function() {
       resizeCanvas();
       animateStars();
       switchScene(1);
-      switchMode('slide'); // Start in presentation slide mode on startup as requested
     };
 
     window.onresize = resizeCanvas;
